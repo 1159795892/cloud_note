@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.pj.cloud_note.dao.UserDao">
+
+	<select id="findByName" parameterType="String"
+		resultType="com.pj.cloud_note.entity.User">
+		select * from cn_user where cn_user_name=#{name}
+	</select>
+	<select id="findByUserId" parameterType="String"
+		resultType="com.pj.cloud_note.entity.User">
+		select * from cn_user where cn_user_id=#{cn_user_id}
+	</select>
+
+	<insert id="save" parameterType="com.pj.cloud_note.entity.User">
+		insert into cn_user(cn_user_id,
+		cn_user_name,
+		cn_user_password,
+		cn_user_nick,
+		cn_user_token)
+		values(#{cn_user_id},
+		#{cn_user_name},
+		#{cn_user_password},
+		#{cn_user_nick},
+		#{cn_user_token})
+	</insert>
+	<!-- 动态更新 -->
+	<update id="dynamicUpdate" parameterType="com.pj.cloud_note.entity.User">
+		update cn_user
+		<set>
+			<if test="cn_user_name!=null">
+				cn_user_name=#{cn_user_name},
+			</if>
+			<if test="cn_user_password!=null">
+				cn_user_password=#{cn_user_password},
+			</if>
+			<if test="cn_user_nick!=null">
+				cn_user_nick=#{cn_user_nick},
+			</if>
+			<if test="cn_user_token!=null">
+				cn_user_token=#{cn_user_token},
+			</if>
+		</set>
+		where cn_user_id=#{cn_user_id}
+	</update>
+</mapper>
+
+
+
+
+
+
+
