@@ -1,4 +1,51 @@
 /**alert.js 封装对话框处理**/
+//弹出删除笔记本对话框
+function alertdeletebook() {
+	$("#can").load("alert/alert_delete_book.html");
+	$(".opacity_bg").show();
+}
+//弹出删除活动笔记对话框
+function alertdeleteAction() {
+	$("#can").load("alert/alert_delete_action.html");
+	$(".opacity_bg").show();
+}
+//弹出删除收藏笔记对话框
+function alertdeletelike() {
+	$("#can").load("alert/alert_delete_like.html");
+	$(".opacity_bg").show();
+}
+//弹出收藏笔记对话框
+function alertdolikeNote() {
+	$("#can").load("alert/alert_like.html");
+	$(".opacity_bg").show();
+}
+//弹出恢复笔记对话框
+function alertrollbackreplay() {
+	$(".opacity_bg").show();
+	$("#can").load("alert/alert_replay.html",function(){
+		//为alert_replay.html中<select>加载数据
+		var books = $("#book_ul li");//获取book列表
+		//循环book列表数据
+		for(var i=0;i<books.length;i++){
+			var $li = $(books[i]);//获取li元素并转为jQuery对象
+			var bookId = $li.data("bookId");//获取笔记本id
+			var bookName = $li.text().trim();//获取笔记本名
+			//创建一个option元素
+			var sopt = '';
+			sopt+='<option value="'+bookId+'">';
+			sopt+= bookName;
+			sopt+='</option>';
+			//添加到select中
+			$("#replaySelect").append(sopt);
+		}
+	});
+};
+//弹出转移删除笔记对话框
+function alertrollbackdelete() {
+	$("#can").load("alert/alert_delete_rollback.html");
+	$(".opacity_bg").show();
+	
+};
 //弹出转移笔记对话框
 function alertMoveNoteWindow(){
 	$(".opacity_bg").show();

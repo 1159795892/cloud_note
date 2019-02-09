@@ -28,9 +28,15 @@
 <script type="text/javascript" src="scripts/note.js"></script>
 <script type="text/javascript" src="scripts/alert.js"></script>
 <script type="text/javascript" src="scripts/share.js"></script>
+<script type="text/javascript" src="scripts/rollback.js"></script>
+<script type="text/javascript" src="scripts/like.js"></script>
+<script type="text/javascript" src="scripts/action.js"></script>
 <script type="text/javascript">
 	var page = 1;//要搜索第几页
 	var keyword = "";//搜索关键字条件
+	var usernick= getCookie("nick");
+	//var userId = getCookie("userId");
+	//alert(usernick);
 	$(function() {
 		//1.加载用户笔记本列表
 		loadUserBooks();
@@ -38,6 +44,9 @@
 		$("#book_ul").on("click", "li", loadBookNotes);
 		//3.给笔记li绑定单击处理
 		$("#note_ul").on("click", "li", loadNote);
+		$("#rollback_ul").on("click", "li", seeRollbackNote);
+		$("#like_ul").on("click", "li", previewNote);
+		$("#action_ul").on("click", "li", seeRollbackNote);
 		//4.给"保存笔记"按钮绑定单击处理
 		$("#save_note").click(updateNote);
 		//弹出创建笔记本alert
@@ -61,6 +70,8 @@
 		$("#note_ul").on("click", ".btn_delete", alertDeleteNoteWindow);
 		$("#can").on("click", "#sure_deletenote", deleteNote);
 		//14.TODO笔记转移
+	 	 $("#note_ul").on("click",".btn_move",alertMoveNoteWindow);
+	 	 $("#can").on("click","#sure_movenote",moveNote);
 		//15.分享笔记
 		$("#note_ul").on("click", ".btn_share", shareNote);
 		//16.搜索分享笔记
@@ -69,7 +80,32 @@
 	 	 $("#more_note").click(sureMorePage);
 	 	//18.查看搜索结果列表的笔记信息
 	 	$("#pc_part_6 ul").on("click","li",previewNote);
-	 	//19.退出登录
+	 	//19.回收站功能设计
+	 	$("#rollback_button").click(rollback);
+	 	//20.回收站功能详细设计
+	 	$("#rollback_ul").on("click", ".btn_replay", alertrollbackreplay);
+	 	$("#can").on("click","#sure_replay",replay);
+	 	$("#rollback_ul").on("click", ".btn_delete", alertrollbackdelete);
+	 	$("#can").on("click","#sure_delete_rollback",delete_rollback);
+	 	//21.收藏夹功能设计
+	 	$("#like_button").click(likeNote);
+	 	//22.收藏笔记
+		$("#search_ul").on("click", ".btn_like", alertdolikeNote);
+		$("#can").on("click","#sure_likeNote",surelike);
+	 	//22.删除收藏笔记
+		$("#like_ul").on("click", ".btn_delete", alertdeletelike);
+		$("#can").on("click","#sure_deletelike",suredeletelike);
+		//23.活动分享功能设计
+	 	$("#action_button").click(action);
+	 	//24.删除活动笔记
+		$("#action_ul").on("click", ".btn_delete", alertdeleteAction);
+		$("#can").on("click","#sure_deleteAction",suredeleteAction);
+	 	//25.删除笔记本
+		$("#book_ul").on("click", ".btn_delete", alertdeletebook);
+		$("#can").on("click","#sure_deleteBook",suredeletebook);
+		//26.用户名
+		$(".profile-username").html(usernick);
+		//退出登录
 	 	$("#logout").click(function() {
 	 		delCookie("userId");
 	 		window.location.href = "edit.html";
@@ -80,13 +116,12 @@
 <body class="animated fadeIn">
 	<header class="header">
 		<div class="header-brand">
-			<a data-pjax=".content-body" href="edit.html"> <img
-				class="brand-logo" src="images/dummy/8986f28e.stilearn-logo.png"
-				alt="Stilearn Admin Sample Logo">
+			<a data-pjax=".content-body" href="edit.html" 
+			style="font-family: '微软雅黑';font-size: 40px;font-weight: bold;" >课堂笔记
 			</a>
 		</div>
 		<div class="header-profile">
-			<div class="profile-nav">
+			<div class="profile-nav" >
 				<span class="profile-username"></span> <a class="dropdown-toggle"
 					data-toggle="dropdown"> <span class="fa fa-angle-down"></span>
 				</a>
@@ -112,8 +147,7 @@
 			</div>
 		</form>
 		<ul class="hidden-xs header-menu pull-right">
-			<li><a href="activity.html" target='_blank' title="笔记活动">活动</a>
-			</li>
+			<!--li><a href="activity.html" target='_blank' title="笔记活动">活动</a></li-->
 		</ul>
 	</header>
 	<div class="row" style='padding: 0;' id='center'>
@@ -187,17 +221,8 @@
 				<div class="module" data-toggle="niceScroll">
 					<div class="chat-contact">
 						<div class="contact-body">
-							<ul class="contacts-list">
-								<li class="disable"><a><i class="fa fa-file-text-o"
-										title="online" rel="tooltip-bottom"></i> 虚假回收站笔记
-										<button type="button"
-											class="btn btn-default btn-xs btn_position btn_delete">
-											<i class="fa fa-times"></i>
-										</button>
-										<button type="button"
-											class="btn btn-default btn-xs btn_position_2 btn_replay">
-											<i class="fa fa-reply"></i>
-										</button></a></li>
+							<ul id="rollback_ul" class="contacts-list"  >
+								<!-- rollback.js -->
 							</ul>
 						</div>
 					</div>
@@ -235,8 +260,8 @@
 				<div class="module" data-toggle="niceScroll">
 					<div class="chat-contact">
 						<div class="contact-body">
-							<ul class="contacts-list">
-								<!--li class="idle"><a ><i class="fa fa-file-text-o" title="online" rel="tooltip-bottom"></i> switch多分支结构<button type="button" class="btn btn-default btn-xs btn_position btn_delete"><i class="fa fa-times"></i></button></a></li-->
+							<ul class="contacts-list" id="like_ul">
+								 <!--like.js  -->
 							</ul>
 						</div>
 					</div>
@@ -254,8 +279,8 @@
 				<div class="module" data-toggle="niceScroll">
 					<div class="chat-contact">
 						<div class="contact-body">
-							<ul class="contacts-list">
-								<!--li class="offline"><a ><i class="fa fa-file-text-o" title="online" rel="tooltip-bottom"></i> 样式用例（点击无效）</a></li-->
+							<ul class="contacts-list" id="action_ul">
+								<!-- action.js -->
 							</ul>
 						</div>
 					</div>
@@ -327,7 +352,7 @@
 		<!-- 预览笔记 -->
 	</div>
 	<footer>
-		<p>&copy; 2014 Stilearning</p>
+		<p>&copy; 2018 forwangpeijin</p>
 		<div
 			style='position: absolute; top: 5PX; height: 30px; right: 20px; line-height: 26px; border: 1px solid #0E7D76; display: none; background: #fff'>
 			<strong style='color: #0E7D76; margin: 0 10px;'></strong>

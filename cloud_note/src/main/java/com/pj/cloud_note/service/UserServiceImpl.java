@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
 		result.setStatus(0);
 		result.setMsg("登录成功");
 		result.setData(user);
+		System.out.println(user);
 		return result;
 
 	}

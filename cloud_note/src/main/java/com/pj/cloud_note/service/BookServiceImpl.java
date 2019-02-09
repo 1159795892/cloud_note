@@ -62,4 +62,19 @@ public class BookServiceImpl implements BookService {
 		}
 	}
 
+	public NoteResult<Object> deleteBook(String bookId) {
+		int rows = bookDao.cheakBookNote(bookId);
+		NoteResult<Object> result=new NoteResult<Object>();
+		if (rows == 0) {// 成功
+			bookDao.deleteBook(bookId);
+			result.setStatus(0);
+			result.setMsg("删除笔记本成功");
+			return result;
+		} else {
+			result.setStatus(1);
+			result.setMsg("还有笔记未删除,不能删除笔记本");
+			return result;
+		}
+	}
+
 }

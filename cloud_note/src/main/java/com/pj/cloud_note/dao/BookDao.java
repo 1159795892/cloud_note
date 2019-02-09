@@ -10,4 +10,6 @@ public interface BookDao {
 	public List<Book> findByUserId(String userId);
 	public void save(Book book);
 	public int dynamicUpdate(Book book);
+	public int deleteBook(String bookId);
+	public int cheakBookNote(String bookId);
 }

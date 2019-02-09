@@ -10,4 +10,5 @@ public interface ShareDao {
 			Map<String, Object> params);
 	public void save(Share share);
 	public Share findByShareId(String shareId);
+	public int dynamicUpdate(Share share);
 }

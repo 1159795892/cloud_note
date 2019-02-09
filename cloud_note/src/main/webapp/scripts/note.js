@@ -1,3 +1,31 @@
+//转移笔记
+function moveNote(){
+	 //获取请求参数
+	 //获取要转移的笔记ID
+	 var $li = $("#note_ul a.checked").parent();
+	 var noteId = $li.data("noteId");
+	 //获取要转入的笔记本ID
+	 var bookId = $("#moveSelect").val();
+	 //发送Ajax请求
+	 $.ajax({
+		 url:path+"/note/move.do",
+		 type:"post",
+		 data:{"noteId":noteId,"bookId":bookId},
+		 dataType:"json",
+		 success:function(result){
+			 if(result.status==0){
+				 //移除笔记li
+				 $li.remove();
+				 //提示成功
+				 alert(result.msg);
+			 }
+		 },
+		 error:function(){
+			 alert("转移笔记异常");
+		 }
+	 });
+ };
+
 //查看搜索结果列表的笔记信息
 function previewNote() {
 	// 获取请求参数
@@ -30,6 +58,40 @@ function previewNote() {
 			alert("查看搜索结果异常");
 		}
 
+	});
+}
+//查看回收站列表的笔记信息
+function seeRollbackNote() {
+	// 获取请求参数
+	var noteId = $(this).data("noteId");
+	// 发送Ajax请求
+	$.ajax({
+		url : path + "/note/load.do",
+		type : "post",
+		data : {
+			"noteId" : noteId
+		},
+		dataType : "json",
+		success : function(result) {
+			var note = result.data;
+			if (result.status == 1) {
+				alert(result.msg);
+			}
+			if (result.status == 0) {
+				var title = note.cn_note_title;
+				var body = note.cn_note_body;
+				$("#noput_note_title").html(title);
+				$("#noput_note_title").next().html(body);
+				// 切换显示
+				$("#pc_part_3").hide();
+				$("#pc_part_5").show();
+			}
+			
+		},
+		error : function() {
+			alert("查看搜索结果异常");
+		}
+		
 	});
 }
 // 删除笔记
@@ -234,53 +296,55 @@ function loadNote() {
 	});
 };
 
+
 function loadBookNotes() {
-	// 切换列表显示
-	$("#pc_part_2").show();
-	$("#pc_part_4").hide();
-	$("#pc_part_6").hide();
-	$("#pc_part_7").hide();
-	$("#pc_part_8").hide();
-	// 设置选中效果
-	$("#book_ul a").removeClass("checked");
-	$(this).find("a").addClass("checked");
-	var bookId = $(this).data("bookId");
-	// 发送ajax请求
-	$.ajax({
-		url : path + "/note/loadnotes.do",
-		type : "post",
-		data : {
-			"bookId" : bookId
-		},
-		dataType : "json",
-		success : function(result) {
-			if (result.status == 0) {
-				// $("#note_ul").html("");
-				// $("#note_ul").empty();
-				// 清空原有笔记列表
-				$("#note_ul li").remove();
-				// 获取服务器返回的笔记集合信息
-				var notes = result.data;
-				// 循环生成笔记li元素
-				for (var i = 0; i < notes.length; i++) {
-					var noteId = notes[i].cn_note_id;
-					// 获取笔记ID和笔记标题
-					var noteTitle = notes[i].cn_note_title;
-					var noteType = notes[i].cn_note_type_id;// 获取服务器返回的笔记分享状态
-					// 创建一个笔记li元素
-					createNoteLi(noteId, noteTitle);
-					if (noteType == "2") {
-						var $li = $("#note_ul a").parent("li:last");
-						var img = '<i class="fa fa-sitemap"></i>';
-						$li.find(".btn_slide_down").before(img);
-					}
-				}
-			}
-		},
-		error : function() {
-			alert("加载笔记列表异常");
-		}
-	});
+	 //切换列表显示
+	 $("#pc_part_2").show();
+	 $("#pc_part_4").hide();
+	 $("#pc_part_6").hide();
+	 $("#pc_part_7").hide();
+	 $("#pc_part_8").hide();
+	 //设置笔记本li选中效果
+	 $("#book_ul a").removeClass("checked");
+	 $(this).find("a").addClass("checked");
+	 //获取请求参数
+	 var bookId = $(this).data("bookId");
+	 //发送Ajax请求
+	 $.ajax({
+		 url:path+"/note/loadnotes.do",
+		 type:"post",
+		 data:{"bookId":bookId},
+		 dataType:"json",
+		 success:function(result){
+			 if(result.status==0){
+				 //清空原有笔记列表
+				//$("#note_ul").empty();
+				 $("#note_ul li").remove();
+				 //获取服务器返回的笔记集合信息
+				 var notes = result.data;
+				 //循环生成笔记li元素
+				 for(var i=0;i<notes.length;i++){
+					 //获取笔记ID和笔记标题
+					 var noteId = notes[i].cn_note_id;
+					 var noteTitle = notes[i].cn_note_title;
+					 //创建一个笔记li元素
+					 createNoteLi(noteId,noteTitle);
+					 //将新添加的元素判断是否该加分享图标
+					 var typeId = 
+						 notes[i].cn_note_type_id;
+					 if(typeId=='2'){//加分享图标
+						 var img = '<i class="fa fa-sitemap"></i>';
+						 //获取新添加的li元素
+						 var $li = $("#note_ul li:last");
+						 $li.find(".btn_slide_down").before(img);
+					 }
+				 }
+			 }
+		 },
+		 error:function(){
+			 alert("加载笔记列表异常");
+		 }
+	 });
 
 };
 function createNoteLi(noteId, noteTitle) {
@@ -306,18 +370,3 @@ function createNoteLi(noteId, noteTitle) {
 	// 将li元素添加到笔记列表ul中
 	$("#note_ul").append($li);
 };
-function createshareLi(shareId, shareTitle) {
-	var sli = "";
-	sli += '<li class="online">';
-	sli += '	<a>';
-	sli += '		<i class="fa fa-file-text-o" title="online" rel="tooltip-bottom"></i>';
-	sli += shareTitle;
-	sli += '		<button type="button" class="btn btn-default btn-xs btn_position btn_slide_down"><i class="fa fa-star"></i></button>';
-	sli += '	</a>';
-	sli += '</li>';
-	var $li = $(sli);
-	$li.data("shareId", shareId);
-	// 添加到搜索结果ul中
-	$("#pc_part_6 ul").append($li);
-	// $("#search_ul").append($li);
-}

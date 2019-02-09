@@ -21,6 +21,27 @@
 		resultType="com.pj.cloud_note.entity.Share">
 		select * from cn_share where cn_share_id=#{cn_share_id}
 	</select>
+	<!-- 动态更新 -->
+	<update id="dynamicUpdate" parameterType="com.pj.cloud_note.entity.Share">
+		update cn_share
+		<set>
+			<trim suffixOverrides=",">
+				<if test="cn_share_title!=null">
+					cn_share_title=#{cn_share_title},
+				</if>
+				<if test="cn_share_body!=null">
+					cn_share_body=#{cn_share_body},
+				</if>
+				<if test="cn_note_id!=null">
+					cn_note_id=#{cn_note_id},
+				</if>
+				<if test="cn_like_type_id!=null">
+					cn_like_type_id=#{cn_like_type_id},
+				</if>
+			</trim>
+		</set>
+		where cn_share_id=#{cn_share_id}
+	</update>
 </mapper>
 
 

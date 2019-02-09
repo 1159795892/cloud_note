@@ -191,4 +191,22 @@ public class NoteServiceImpl implements NoteService {
 		result.setMsg("批量删除笔记成功");
 		return result;
 	}
+
+	public NoteResult<Object> moveNotes(String noteId, String bookId) {
+		Note note =new Note();
+		note.setCn_note_id(noteId);//设置笔记ID
+		note.setCn_notebook_id(bookId);//设置笔记本ID
+		int rows=noteDao.dynamicUpdate(note);
+		//创建返回结果
+		NoteResult<Object> result=new NoteResult<Object>();
+		if(rows>=1){
+			result.setStatus(0);
+			result.setMsg("转移笔记成功");
+		}else{
+			result.setStatus(1);
+			result.setMsg("转移笔记失败");
+		}
+		return result;
+		
+	}
 }

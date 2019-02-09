@@ -17,4 +17,5 @@ public interface NoteService {
 	public NoteResult<List<Share>> searchShareNote(String keyword ,int page);
 	public NoteResult<Share> loadShareNote(String shareId);
 	public NoteResult<Object> deleteNotes(String... ids);
+	public NoteResult<Object> moveNotes(String noteId, String bookId);
 }

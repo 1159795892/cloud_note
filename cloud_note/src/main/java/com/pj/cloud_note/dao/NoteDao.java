@@ -23,4 +23,6 @@ public interface NoteDao {
 	public int deleteNotes (Map<String, Object> map);
 	public int delectNote(String noteId);
 	public int batchDelete(String[] ids);
+	
+	
 }

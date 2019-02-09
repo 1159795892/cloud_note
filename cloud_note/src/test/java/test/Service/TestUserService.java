@@ -42,7 +42,7 @@ public class TestUserService {
 	}
 	@Test//用例-1:预期结果:用户已存在
 	public void test4(){
-		NoteResult<Object> result = service.addUser("张山", "123456", "金宝");
+		NoteResult<Object> result = service.addUser("wpj", "123123", "王培锦");
 		System.out.println(result.getStatus());
 		System.out.println(result.getMsg());
 	}

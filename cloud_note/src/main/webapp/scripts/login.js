@@ -48,6 +48,8 @@ function userLogin() {
 				if (result.status == 0) {
 					// 将用户信息保存到Cookie
 					var userId = result.data.cn_user_id;
+					var nick = result.data.cn_user_nick;
+					addCookie("nick", nick, 20);
 					addCookie("userId", userId, 2);
 					window.location.href = "edit.html";
 				} else if (result.status == 1) {

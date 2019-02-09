@@ -1,3 +1,34 @@
+//删除参加活动笔记
+function suredeletebook() {
+	// 获取noteId
+	var $li = // 获取选中的笔记li元素
+	$("#book_ul a.checked").parent();
+	var bookId = $li.data("bookId");
+	// 发送Ajax请求
+	$.ajax({
+		url : path + "/note/suredeletebook.do",
+		type : "post",
+		data : {
+			"bookId" : bookId
+		},
+		dataType : "json",
+		success : function(result) {
+			if (result.status == 0) {
+				// 删除li
+				$li.remove();
+				// 提示成功
+				alert(result.msg);
+			}
+			if (result.status == 1) {
+				// 提示删除活动笔记失败
+				alert(result.msg);
+			}
+		},
+		error : function() {
+			alert("删除笔记本异常");
+		}
+	});
+}
 //笔记本重命名
 function renameBook() {
 	$("#renamebook_span").html("");
@@ -131,6 +162,7 @@ function createBookLi(bookId, bookName) {
 	sli += '  <a>';
 	sli += '    <i class="fa fa-book" title="online" rel="tooltip-bottom">';
 	sli += '    </i>' + bookName;
+	sli += '		<button type="button" class="btn btn-default btn-xs btn_position btn_delete"><i class="fa fa-times"></i></button>';
 	sli += '  </a>';
 	sli += '</li>';
 	// 将sli字符串转换成JQuery对象li元素

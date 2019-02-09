@@ -7,6 +7,7 @@ public class Share implements Serializable {
 	private String cn_share_title;
 	private String cn_share_body;
 	private String cn_note_id;
+	private String cn_like_type_id;
 	public String getCn_share_id() {
 		return cn_share_id;
 	}
@@ -31,12 +32,18 @@ public class Share implements Serializable {
 	public void setCn_note_id(String cn_note_id) {
 		this.cn_note_id = cn_note_id;
 	}
+	public String getCn_like_type_id() {
+		return cn_like_type_id;
+	}
+	public void setCn_like_type_id(String cn_like_type_id) {
+		this.cn_like_type_id = cn_like_type_id;
+	}
 	@Override
 	public String toString() {
 		return "Share [cn_share_id=" + cn_share_id + ", cn_share_title=" + cn_share_title + ", cn_share_body="
-				+ cn_share_body + ", cn_note_id=" + cn_note_id + "]";
+				+ cn_share_body + ", cn_note_id=" + cn_note_id + ", cn_like_type_id=" + cn_like_type_id + "]";
 	}
 	
-	
+		
 	
 }

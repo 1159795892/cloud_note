@@ -50,4 +50,11 @@ public class testBookDao {
 		System.out.println(book);
 		
 	}
+	@Test//测试是否能增加数据
+	public void testcount(){
+		String bookId="cf992df44e8f4de8813593d2cbe9c482";
+		int rows = dao.cheakBookNote(bookId);
+		System.out.println(rows);
+		
+	}
 }

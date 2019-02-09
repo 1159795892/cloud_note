@@ -15,7 +15,7 @@ public class deleteController {
 	@Resource(name = "noteService")
 	private NoteService noteService;
 	
-	@RequestMapping("/note/delete")
+	@RequestMapping("/note/delete.do")
 	@ResponseBody
 	public NoteResult<Object> execute(String noteId) {
 		NoteResult<Object> result = noteService.delectNote(noteId);
