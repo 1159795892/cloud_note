@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.pj.cloud_note.dao.LikeDao">
+	
+	<select id="findLikeNoteById"  resultType="com.pj.cloud_note.entity.Share" >
+		select * from cn_share where cn_like_type_id='2'
+	</select>
+	<insert id="saveLike" parameterType="com.pj.cloud_note.entity.Like" >
+		insert into cn_like (
+		cn_like_id,cn_like_title,cn_like_body,cn_share_id
+		)values(
+		#{cn_like_id},
+		#{cn_like_title},
+		#{cn_like_body},
+		#{cn_share_id}
+		)
+	</insert>
+	
+	<delete id="deleteLike" parameterType="string">
+		delete from cn_like where
+		cn_share_id=#{cn_share_id}
+	</delete>
+</mapper>
+
+
+
+
+
+
+

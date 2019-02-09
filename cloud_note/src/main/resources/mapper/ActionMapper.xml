@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.pj.cloud_note.dao.ActionDao">
+	
+	<select id="LoadActionNotes"  resultType="com.pj.cloud_note.entity.Note" >
+		select * from cn_note where  cn_note_type_id="2"
+	</select>
+
+	<delete id="deleteAction" parameterType="string">
+		delete from cn_share where
+		cn_note_id=#{cn_note_id}
+	</delete>
+</mapper>
+
+
+
+
+
+
+
